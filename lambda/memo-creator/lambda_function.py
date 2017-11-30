@@ -1,6 +1,7 @@
 import boto3
 import datetime
 import calendar
+import requests
 
 
 def lambda_handler(event, context):
@@ -24,6 +25,12 @@ def lambda_handler(event, context):
         payment_info=event['payment'],
         delivery_info=event['delivery']['address']
     )
+
+    # send to memo
+    requests.get('https://hgwx8w7r64.execute-api.us-east-1.amazonaws.com/prod/eat-up-call-connector', params={
+        'to_number': '+15182818509',
+        'order_memo': 'https://s3.amazonaws.com/eat-up-recordings/%s' % memo_location
+    })
 
     return 'memo created and saved to %s' % memo_location
 
@@ -57,7 +64,7 @@ def generate_voice_memo(name=None, order_data=None, payment_info=None, delivery_
     bucket = s3.Bucket('eat-up-recordings')
 
     filename = '%s-recording-%s.mp3' % (name.replace(' ', '-'), timestamp())
-    bucket.upload_fileobj(response['AudioStream'], filename)
+    bucket.upload_fileobj(response['AudioStream'], filename, {'ContentType': 'audio/mpeg'})
 
     return filename
 
