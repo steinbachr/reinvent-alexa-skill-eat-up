@@ -2,9 +2,6 @@
 const Alexa = require("alexa-sdk");
 const https = require('https');
 
-// For detailed tutorial on how to make an Alexa skill,
-// please visit us at http://alexa.design/build
-
 var handlers = {
     'NewSession': function() {
         console.log("in NewSession");
@@ -22,7 +19,6 @@ var handlers = {
     },
     'DiscoveryIntent' : function () {
         //Call the eat up API
-        // this.response.speak('You have been in Mc Donalds.');
         let eatUpDiscovery = buildEatUpOptions();
         console.log("eat up discovery", eatUpDiscovery);
         httpGet(eatUpDiscovery).then(
@@ -58,7 +54,6 @@ var handlers = {
                 this.emit(':responseReady');
             }
         );
-        this.emit(':responseReady');
     },
     'SessionEndedRequest' : function() {
         console.log('Session ended with reason: ' + this.event.request.reason);
